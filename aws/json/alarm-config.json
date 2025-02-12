@@ -1,0 +1,24 @@
+{
+    "AlarmName": "CostBudgetAlarm",
+    "AlarmDescription": "Triggers when the monthly AWS cost exceeds $1.",
+    "ActionsEnabled": true,
+    "OKActions": [],
+    "AlarmActions": [
+      "arn:aws:sns:us-east-1:***REMOVED***:billing-alarm"
+    ],
+    "MetricName": "EstimatedCharges",
+    "Namespace": "AWS/Billing",
+    "Statistic": "Maximum",
+    "Dimensions": [
+      {
+        "Name": "Currency",
+        "Value": "USD"
+      }
+    ],
+    "Period": 86400,
+    "EvaluationPeriods": 1,
+    "Threshold": 1,
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "TreatMissingData": "notBreaching"
+  }
+  
