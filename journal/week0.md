@@ -9,6 +9,8 @@ I created two of my own Budgets for $1 each for practical and demonstrational pu
 
 ![Image of The Budgets I Created](assets/Proof-of-Budget.png)
 
+Here is me referencing a file in my repo regarding my creation of a [Budget Alarm via AWS CLI](https://github.com/fredjoya/aws-bootcamp-cruddur-2023/blob/main/aws/json/alarm-config.json)
+
 ### Create Billing Alarm
 I created a Billing Alarm via Cloudwatch to be sent to my email address once billing threshold surpasses $1 (my budget).
 
