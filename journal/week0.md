@@ -15,9 +15,9 @@ I created a Billing Alarm via SNS to be sent to my email address once billing th
 ### Recreate Logical Architectural Design
 ![Cruddur App Logical Architecture Design](assets/logical-architecture-recreation-diagram.png)
 
-![Lucid Charts Share Link](https://lucid.app/lucidchart/eccd1f8e-05aa-4277-a442-107996043b7c/edit?viewport_loc=-1327%2C-129%2C2807%2C1238%2C0_0&invitationId=inv_85af466a-0e52-4b17-bf3a-428d1f38a2c3)
+[Lucid Charts Share Link](https://lucid.app/lucidchart/eccd1f8e-05aa-4277-a442-107996043b7c/edit?viewport_loc=-1327%2C-129%2C2807%2C1238%2C0_0&invitationId=inv_85af466a-0e52-4b17-bf3a-428d1f38a2c3)
 
-## Example of Referencing a file in the codebase
+### Example of Referencing a file in the codebase
 Example of me referencing a file in my repo 
 
 ## References
