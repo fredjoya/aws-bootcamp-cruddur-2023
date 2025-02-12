@@ -7,7 +7,7 @@
 ### Create a Budget
 I created two of my own Budgets for $1 each for practical and demonstrational purposes. I created one via AWS CLI and one via the Management Console.
 
-![Image of The Budget Alarm I Created](assets/budget-alarm.png)
+![Image of The Budgets I Created](assets/Proof-of-Budget.png)
 
 ### Create Billing Alarm
 I created a Billing Alarm via Cloudwatch to be sent to my email address once billing threshold surpasses $1 (my budget).
