@@ -4,7 +4,7 @@
     "ActionsEnabled": true,
     "OKActions": [],
     "AlarmActions": [
-      "arn:aws:sns:us-east-1:***REMOVED***:billing-alarm"
+      "arn:aws:service:region:[REDACTED]:resource"
     ],
     "MetricName": "EstimatedCharges",
     "Namespace": "AWS/Billing",
