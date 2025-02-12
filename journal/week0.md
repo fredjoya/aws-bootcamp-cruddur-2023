@@ -1,6 +1,6 @@
 #### Week 0 — Billing and Architecture
 
-###Intalled and Verified AWS CLI via Gitpod in Terminal using bash.
+### Installed and Verified AWS CLI via Gitpod in Terminal using bash.
 ![Proof of Working AWS CLI] (assets/proof-of-aws-cli.png)
 
 
