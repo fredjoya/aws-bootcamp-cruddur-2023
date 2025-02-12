@@ -17,7 +17,7 @@ I created a Billing Alarm via Cloudwatch to be sent to my email address once bil
 
 ### Recreate Logical Architectural Design
 
-![Cruddur App Logical Architecture Design](assets/logical-architecture-recreation-diagram.png)
+![Cruddur App Logical Architecture Design](assets/Logical-architecture-recreation-diagram.png)
 
 [Lucid Charts Share Link](https://lucid.app/lucidchart/eccd1f8e-05aa-4277-a442-107996043b7c/edit?viewport_loc=-1327%2C-129%2C2807%2C1238%2C0_0&invitationId=inv_85af466a-0e52-4b17-bf3a-428d1f38a2c3)
 
