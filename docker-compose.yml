@@ -11,7 +11,7 @@ services:
     volumes:
       - ./backend-flask:/backend-flask
     networks:
-      - internal-network
+      - cruddur-net
 
   frontend-react-js:
     environment:
@@ -21,10 +21,38 @@ services:
       - "3000:3000"
     volumes: 
       - ./frontend-react-js:/frontend-react-js  # Fixed indentation and corrected path
+  dynamodb-local:
+    # https://stackoverflow.com/questions/67533058/persist-local-dynamodb-data-in-volumes-lack-permission-unable-to-open-databa
+    # We needed to add user:root to get this working.
+    user: root
+    command: '-jar DynamoDBLocal.jar -sharedDb -dbPath ./data'
+    image: 'amazon/dynamodb-local:latest'
+    container_name: dynamodb-local
+    ports:
+      - '8000:8000'
     networks:
-      - internal-network
+      - cruddur-net
+    volumes:
+      - './docker/dynamodb:/home/dynamodblocal/data'
+    working_dir: /home/dynamodblocal
+  db:
+    image: postgres:13-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - '5432:5432'
+    networks:
+      - cruddur-net
+    volumes: 
+      - db:/var/lib/postgresql/data
 
-networks:
-  internal-network:
+networks: 
+  cruddur-net:
     driver: bridge
-    name: cruddur  # Moved inside the `networks` block
+    name: cruddur-net
+
+volumes:
+  db:
+    driver: local
