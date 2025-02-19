@@ -9,3 +9,5 @@ opentelemetry-instrumentation-requests
 opentelemetry-distro
 
 aws-xray-sdk
+
+watchtower
