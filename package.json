@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "rollbar": "^2.26.4"
+  }
+}

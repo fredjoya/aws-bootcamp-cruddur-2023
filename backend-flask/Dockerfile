@@ -31,6 +31,7 @@ EXPOSE 4567
 # set Inside Container and will remain set when the container is running
 ENV FLASK_ENV=development
 
+
 # Run app.py when the container launches
 # Command
 CMD ["flask", "run", "--host=0.0.0.0", "--port=4567"]
