@@ -24,12 +24,13 @@ import logging
 from time import strftime
 
 # Configuring Logger to Use CloudWatch
-LOGGER = logging.getLogger(__name__)
-LOGGER.setLevel(logging.DEBUG)
-console_handler = logging.StreamHandler()
-cw_handler = watchtower.CloudWatchLogHandler(log_group='cruddur')
-LOGGER.addHandler(console_handler)
-LOGGER.addHandler(cw_handler)
+# LOGGER = logging.getLogger(__name__)
+# LOGGER.setLevel(logging.DEBUG)
+# console_handler = logging.StreamHandler()
+# cw_handler = watchtower.CloudWatchLogHandler(log_group='cruddur')
+# LOGGER.addHandler(console_handler)
+# LOGGER.addHandler(cw_handler)
+# LOGGER.info("TEST LOG")
 
 # Initialize logging
 logging.basicConfig(level=logging.DEBUG)
@@ -57,36 +58,36 @@ trace.set_tracer_provider(provider)
 app = Flask(__name__)
 
 # X-RAY Middleware ---------------
-xray_url = os.getenv("AWS_XRAY_URL", None)
-xray_daemon_address = os.getenv("AWS_XRAY_DAEMON_ADDRESS", None)
+# xray_url = os.getenv("AWS_XRAY_URL", None)
+# xray_daemon_address = os.getenv("AWS_XRAY_DAEMON_ADDRESS", None)
 
-if xray_url and xray_daemon_address:
-    try:
+# if xray_url and xray_daemon_address:
+#    try:
         # Configure X-Ray recorder with local sampling rules
-        xray_recorder.configure(
-            service='backend-flask',
-            dynamic_naming=xray_url,
-            daemon_address=xray_daemon_address,
-            context_missing='LOG_ERROR',
-            sampling=False  # Disable sampling in development
-        )
+#        xray_recorder.configure(
+#            service='backend-flask',
+#           dynamic_naming=xray_url,
+#            daemon_address=xray_daemon_address,
+#            context_missing='LOG_ERROR',
+#            sampling=False  # Disable sampling in development
+#        )
         # Initialize X-Ray middleware
-        XRayMiddleware(app, xray_recorder)
-        logger.info("AWS X-Ray initialized with daemon address: %s", xray_daemon_address)
-    except Exception as e:
-        logger.warning("Failed to initialize X-Ray: %s", str(e))
-        # Configure X-Ray for local development
-        xray_recorder.configure(
-            service='backend-flask',
-            sampling=False,
-            context_missing='LOG_ERROR',
-            daemon_address='xray-daemon:2000',
-            local_mode=True
-        )
-        XRayMiddleware(app, xray_recorder)
-        logger.info("AWS X-Ray initialized in local mode")
-else:
-    logger.info("X-Ray is disabled because AWS_XRAY_URL or AWS_XRAY_DAEMON_ADDRESS is not set")
+#        XRayMiddleware(app, xray_recorder)
+#        logger.info("AWS X-Ray initialized with daemon address: %s", xray_daemon_address)
+#    except Exception as e:
+#       logger.warning("Failed to initialize X-Ray: %s", str(e))
+       # Configure X-Ray for local development
+#        xray_recorder.configure(
+#            service='backend-flask',
+#            sampling=False,
+#            context_missing='LOG_ERROR',
+#            daemon_address='xray-daemon:2000',
+#            local_mode=True
+#        )
+#        XRayMiddleware(app, xray_recorder)
+#         logger.info("AWS X-Ray initialized in local mode")
+# else:
+#    logger.info("X-Ray is disabled because AWS_XRAY_URL or AWS_XRAY_DAEMON_ADDRESS is not set")
 
 # Initialize automatic instrumentation with Flask
 FlaskInstrumentor().instrument_app(app)
@@ -114,6 +115,13 @@ cors = CORS(
     allow_headers="content-type,if-modified-since", 
     methods="OPTIONS,GET,HEAD,POST"
 )
+
+# @app.after_request
+# def after_request(response):
+ #   timestamp = strftime('[%Y-%b-%d %H:%M]')
+ #   LOGGER.error('%s %s %s %s %s %s', timestamp, request.remote_addr, request.method, request.scheme, request.full_path, response.status)
+ #   return response
+
 
 @app.route("/api/message_groups", methods=['GET'])
 def data_message_groups():
