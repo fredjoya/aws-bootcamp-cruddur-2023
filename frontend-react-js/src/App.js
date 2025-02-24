@@ -18,7 +18,7 @@ import {
   RouterProvider
 } from "react-router-dom";
 
-import { Auth } from '@aws-amplify/auth';
+import { Amplify } from 'aws-amplify';
 
 Amplify.configure({
   "aws_project_region": process.env.REACT_APP_AWS_PROJECT_REGION,
