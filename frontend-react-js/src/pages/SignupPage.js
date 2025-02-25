@@ -17,7 +17,7 @@ export default function SignupPage() {
     
     try {
       const { user } = await Auth.signUp({
-        username: email,
+        username: username,
         password,
         attributes: {
           name: name,
