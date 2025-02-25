@@ -30,6 +30,11 @@ Amplify.configure({
     userPoolWebClientId: process.env.REACT_APP_CLIENT_ID,
   }
 });
+console.log('Environment Variables:', {
+  region: process.env.REACT_APP_AWS_PROJECT_REGION,
+  userPoolId: process.env.REACT_APP_AWS_USER_POOLS_ID,
+  userPoolWebClientId: process.env.REACT_APP_CLIENT_ID,
+});
 
 // Optional debug log to check if env variables are loaded correctly
 console.log("Auth config:", {

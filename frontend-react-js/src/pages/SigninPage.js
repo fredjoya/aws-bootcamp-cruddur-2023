@@ -1,30 +1,8 @@
 import './SigninPage.css';
 import React from "react";
-import {ReactComponent as Logo} from '../components/svg/logo.svg';
+import { ReactComponent as Logo } from '../components/svg/logo.svg';
 import { Link } from "react-router-dom";
-
-
 import { Auth } from 'aws-amplify';
-console.log('Auth object:', Auth);
-
-// Later in the code
-const onsubmit = async (event) => {
-  setErrors('')
-  event.preventDefault();
- 
-  try {
-    const user = await Auth.signIn(email, password);
-    localStorage.setItem("access_token", user.signInUserSession.accessToken.jwtToken);
-    window.location.href = "/";
-  } catch (error) {
-    console.log('Error signing in:', error);
-    if (error.code === 'UserNotConfirmedException') {
-      window.location.href = "/confirm";
-    }
-    setErrors(error.message);
-  }
-}
-
 
 export default function SigninPage() {
   const [email, setEmail] = React.useState('');
@@ -32,46 +10,43 @@ export default function SigninPage() {
   const [errors, setErrors] = React.useState('');
 
   const onsubmit = async (event) => {
-    setErrors('')
+    setErrors('');
     event.preventDefault();
-   
+
     try {
-      const { isSignedIn, nextStep } = await signIn({
-        username: email,
-        password: password
-      });
-      
-      if (isSignedIn) {
-        // Get the auth session to extract tokens
-        const session = await fetchAuthSession();
-        localStorage.setItem("access_token", session.tokens.accessToken.toString());
-        window.location.href = "/";
-      } else if (nextStep.signInStep === 'CONFIRM_SIGN_UP') {
-        // Handle unconfirmed user case
-        window.location.href = "/confirm";
-      }
+      // Use Auth.signIn to authenticate the user
+      const user = await Auth.signIn(email, password);
+
+      // Store the access token in localStorage
+      localStorage.setItem("access_token", user.signInUserSession.accessToken.jwtToken);
+
+      // Redirect to the home page
+      window.location.href = "/";
     } catch (error) {
       console.log('Error signing in:', error);
-      if (error.message === 'User is not confirmed.') {
+
+      // Handle specific errors
+      if (error.code === 'UserNotConfirmedException') {
         window.location.href = "/confirm";
+      } else {
+        setErrors(error.message);
       }
-      setErrors(error.message);
     }
-  }
+  };
 
   const email_onchange = (event) => {
     setEmail(event.target.value);
-  }
- 
+  };
+
   const password_onchange = (event) => {
     setPassword(event.target.value);
-  }
- 
+  };
+
   let el_errors;
-  if (errors){
+  if (errors) {
     el_errors = <div className='errors'>{errors}</div>;
   }
- 
+
   return (
     <article className="signin-article">
       <div className='signin-info'>
