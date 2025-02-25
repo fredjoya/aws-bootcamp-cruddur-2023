@@ -3,6 +3,11 @@ import React from "react";
 import { ReactComponent as Logo } from '../components/svg/logo.svg';
 import { Link } from "react-router-dom";
 import { Auth } from 'aws-amplify';
+import CryptoJS from 'crypto-js';
+
+const calculateSecretHash = (username, clientId, clientSecret) => {
+  return CryptoJS.HmacSHA256(username + clientId, clientSecret).toString(CryptoJS.enc.Base64);
+};
 
 export default function SigninPage() {
   const [email, setEmail] = React.useState('');
@@ -10,22 +15,31 @@ export default function SigninPage() {
   const [errors, setErrors] = React.useState('');
 
   const onsubmit = async (event) => {
-    setErrors('');
     event.preventDefault();
+    setErrors('');
 
     try {
-      // Use Auth.signIn to authenticate the user
-      const user = await Auth.signIn(email, password);
+      const clientId = process.env.REACT_APP_CLIENT_ID;
+      const clientSecret = process.env.REACT_APP_CLIENT_SECRET;
 
-      // Store the access token in localStorage
+      console.log('Client ID:', clientId);
+      console.log('Client Secret:', clientSecret);
+
+      const secretHash = calculateSecretHash(email, clientId, clientSecret);
+      console.log('Secret Hash:', secretHash);
+
+      const user = await Auth.signIn({
+        username: email,
+        password: password,
+        authParameters: {
+          SECRET_HASH: secretHash,
+        },
+      });
+
       localStorage.setItem("access_token", user.signInUserSession.accessToken.jwtToken);
-
-      // Redirect to the home page
       window.location.href = "/";
     } catch (error) {
       console.log('Error signing in:', error);
-
-      // Handle specific errors
       if (error.code === 'UserNotConfirmedException') {
         window.location.href = "/confirm";
       } else {
@@ -50,7 +64,7 @@ export default function SigninPage() {
   return (
     <article className="signin-article">
       <div className='signin-info'>
-        <Logo className='logo' />
+        <Logo className='logo' /> {/* Ensure you have a Logo component */}
       </div>
       <div className='signin-wrapper'>
         <form
