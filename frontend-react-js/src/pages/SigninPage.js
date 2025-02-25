@@ -3,70 +3,82 @@ import React from "react";
 import {ReactComponent as Logo} from '../components/svg/logo.svg';
 import { Link } from "react-router-dom";
 
-// [TODO] Authenication
-//import Cookies from 'js-cookie'
+
 import { Auth } from 'aws-amplify';
+console.log('Auth object:', Auth);
+
+// Later in the code
+const onsubmit = async (event) => {
+  setErrors('')
+  event.preventDefault();
+ 
+  try {
+    const user = await Auth.signIn(email, password);
+    localStorage.setItem("access_token", user.signInUserSession.accessToken.jwtToken);
+    window.location.href = "/";
+  } catch (error) {
+    console.log('Error signing in:', error);
+    if (error.code === 'UserNotConfirmedException') {
+      window.location.href = "/confirm";
+    }
+    setErrors(error.message);
+  }
+}
 
 
 export default function SigninPage() {
-
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [errors, setErrors] = React.useState('');
 
-  // const onsubmit = async (event) => {
-  //   event.preventDefault();
-  //   setErrors('')
-  //   console.log('onsubmit')
-  //   if (Cookies.get('user.email') === email && Cookies.get('user.password') === password){
-  //     Cookies.set('user.logged_in', true)
-  //     window.location.href = "/"
-  //   } else {
-  //     setErrors("Email and password is incorrect or account doesn't exist")
-  //   }
-  //   return false
-  // }
-
   const onsubmit = async (event) => {
     setErrors('')
     event.preventDefault();
-    //alert(email)
-    //try {
-      Auth.signIn(email, password)
-        .then(user => {
-          localStorage.setItem("access_token", user.signInUserSession.accessToken.jwtToken)
-          window.location.href = "/"
-        })
-        .catch(error => {
-          alert(error)
-          if (error.code == 'UserNotConfirmedException') {
-            window.location.href = "/confirm"
-          }
-          setErrors(error.message) });
-    
-    return false
+   
+    try {
+      const { isSignedIn, nextStep } = await signIn({
+        username: email,
+        password: password
+      });
+      
+      if (isSignedIn) {
+        // Get the auth session to extract tokens
+        const session = await fetchAuthSession();
+        localStorage.setItem("access_token", session.tokens.accessToken.toString());
+        window.location.href = "/";
+      } else if (nextStep.signInStep === 'CONFIRM_SIGN_UP') {
+        // Handle unconfirmed user case
+        window.location.href = "/confirm";
+      }
+    } catch (error) {
+      console.log('Error signing in:', error);
+      if (error.message === 'User is not confirmed.') {
+        window.location.href = "/confirm";
+      }
+      setErrors(error.message);
+    }
   }
-
 
   const email_onchange = (event) => {
     setEmail(event.target.value);
   }
+ 
   const password_onchange = (event) => {
     setPassword(event.target.value);
   }
-
+ 
   let el_errors;
   if (errors){
     el_errors = <div className='errors'>{errors}</div>;
   }
-
+ 
   return (
     <article className="signin-article">
       <div className='signin-info'>
         <Logo className='logo' />
       </div>
       <div className='signin-wrapper'>
-        <form 
+        <form
           className='signin_form'
           onSubmit={onsubmit}
         >
@@ -77,7 +89,7 @@ export default function SigninPage() {
               <input
                 type="text"
                 value={email}
-                onChange={email_onchange} 
+                onChange={email_onchange}
               />
             </div>
             <div className='field text_field password'>
@@ -85,7 +97,7 @@ export default function SigninPage() {
               <input
                 type="password"
                 value={password}
-                onChange={password_onchange} 
+                onChange={password_onchange}
               />
             </div>
           </div>
@@ -94,7 +106,6 @@ export default function SigninPage() {
             <Link to="/forgot" className="forgot-link">Forgot Password?</Link>
             <button type='submit'>Sign In</button>
           </div>
-
         </form>
         <div className="dont-have-an-account">
           <span>
@@ -103,7 +114,6 @@ export default function SigninPage() {
           <Link to="/signup">Sign up!</Link>
         </div>
       </div>
-
     </article>
   );
 }

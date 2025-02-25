@@ -2,127 +2,130 @@ import './RecoverPage.css';
 import React from "react";
 import {ReactComponent as Logo} from '../components/svg/logo.svg';
 import { Link } from "react-router-dom";
+import { Auth } from 'aws-amplify';
 
 export default function RecoverPage() {
-  // Username is Eamil
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [passwordAgain, setPasswordAgain] = React.useState('');
   const [code, setCode] = React.useState('');
   const [errors, setErrors] = React.useState('');
   const [formState, setFormState] = React.useState('send_code');
+  const [codeSent, setCodeSent] = React.useState(false);
 
   const onsubmit_send_code = async (event) => {
     event.preventDefault();
-    console.log('onsubmit_send_code')
-    return false
+    setErrors('');
+    
+    try {
+      await Auth.forgotPassword(username);
+      setFormState('confirm_code');
+      setCodeSent(true);
+    } catch (error) {
+      console.log('Error requesting password reset:', error);
+      setErrors(error.message);
+    }
   }
+
   const onsubmit_confirm_code = async (event) => {
     event.preventDefault();
-    console.log('onsubmit_confirm_code')
-    return false
+    setErrors('');
+    
+    if (password !== passwordAgain) {
+      setErrors('Passwords do not match');
+      return;
+    }
+    
+    try {
+      await Auth.forgotPasswordSubmit(username, code, password);
+      setFormState('success');
+    } catch (error) {
+      console.log('Error resetting password:', error);
+      setErrors(error.message);
+    }
   }
 
   const username_onchange = (event) => {
     setUsername(event.target.value);
   }
+  
   const password_onchange = (event) => {
     setPassword(event.target.value);
   }
+  
   const password_again_onchange = (event) => {
     setPasswordAgain(event.target.value);
   }
+  
   const code_onchange = (event) => {
     setCode(event.target.value);
   }
 
   let el_errors;
-  if (errors){
+  if (errors) {
     el_errors = <div className='errors'>{errors}</div>;
   }
 
   const send_code = () => {
-    return (<form 
-      className='recover_form'
-      onSubmit={onsubmit_send_code}
-    >
-      <h2>Recover your Password</h2>
-      <div className='fields'>
-        <div className='field text_field username'>
-          <label>Email</label>
-          <input
-            type="text"
-            value={username}
-            onChange={username_onchange} 
-          />
+    return (
+      <form className='recover_form' onSubmit={onsubmit_send_code}>
+        <h2>Recover your Password</h2>
+        <div className='fields'>
+          <div className='field text_field username'>
+            <label>Email</label>
+            <input type="text" value={username} onChange={username_onchange} />
+          </div>
         </div>
-      </div>
-      {el_errors}
-      <div className='submit'>
-        <button type='submit'>Send Recovery Code</button>
-      </div>
-
-    </form>
-    )
+        {el_errors}
+        <div className='submit'>
+          <button type='submit'>Send Recovery Code</button>
+        </div>
+      </form>
+    );
   }
 
   const confirm_code = () => {
-    return (<form 
-      className='recover_form'
-      onSubmit={onsubmit_confirm_code}
-    >
-      <h2>Recover your Password</h2>
-      <div className='fields'>
-        <div className='field text_field code'>
-          <label>Reset Password Code</label>
-          <input
-            type="text"
-            value={code}
-            onChange={code_onchange} 
-          />
+    return (
+      <form className='recover_form' onSubmit={onsubmit_confirm_code}>
+        <h2>Recover your Password</h2>
+        <div className='fields'>
+          <div className='field text_field code'>
+            <label>Reset Password Code</label>
+            <input type="text" value={code} onChange={code_onchange} />
+          </div>
+          <div className='field text_field password'>
+            <label>New Password</label>
+            <input type="password" value={password} onChange={password_onchange} />
+          </div>
+          <div className='field text_field password_again'>
+            <label>New Password Again</label>
+            <input type="password" value={passwordAgain} onChange={password_again_onchange} />
+          </div>
         </div>
-        <div className='field text_field password'>
-          <label>New Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={password_onchange} 
-          />
+        {el_errors}
+        <div className='submit'>
+          <button type='submit'>Reset Password</button>
         </div>
-        <div className='field text_field password_again'>
-          <label>New Password Again</label>
-          <input
-            type="password"
-            value={passwordAgain}
-            onChange={password_again_onchange} 
-          />
-        </div>
-      </div>
-      {errors}
-      <div className='submit'>
-        <button type='submit'>Reset Password</button>
-      </div>
-    </form>
-    )
+      </form>
+    );
   }
 
   const success = () => {
-    return (<form>
-      <p>Your password has been successfully reset!</p>
-      <Link to="/signin" className="proceed">Proceed to Signin</Link>
-    </form>
-    )
-    }
+    return (
+      <div className="success">
+        <p>Your password has been successfully reset!</p>
+        <Link to="/signin" className="proceed">Proceed to Signin</Link>
+      </div>
+    );
+  }
 
   let form;
-  if (formState == 'send_code') {
-    form = send_code()
-  }
-  else if (formState == 'confirm_code') {
-    form = confirm_code()
-  }
-  else if (formState == 'success') {
-    form = success()
+  if (formState === 'send_code') {
+    form = send_code();
+  } else if (formState === 'confirm_code') {
+    form = confirm_code();
+  } else if (formState === 'success') {
+    form = success();
   }
 
   return (
@@ -133,7 +136,6 @@ export default function RecoverPage() {
       <div className='recover-wrapper'>
         {form}
       </div>
-
     </article>
   );
 }
