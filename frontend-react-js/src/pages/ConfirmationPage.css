@@ -1,107 +1,158 @@
-article.confirm-article .recover-info .logo {
+/* Main container for the confirmation page */
+.confirmation-article {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  background: #8819f5;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Logo styling */
+.confirmation-info .logo {
   width: 140px;
   height: 140px;
   fill: #2021246c;
+  margin-bottom: 20px;
 }
 
-article.confirm-article {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  justify-content: flex-start;
-  align-items: center;
-  background: #8819f5;
-}
-
-article.confirm-article .recover-wrapper {
+/* Wrapper for the confirmation form */
+.confirmation-wrapper {
   background: #202124;
-  width: 560px;
   border-radius: 12px;
+  width: 100%;
+  max-width: 560px;
+  padding: 48px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Form styling */
+.confirmation_form {
   display: flex;
   flex-direction: column;
-}
-article.confirm-article form {
-  padding: 48px;
-  flex-grow: 1;
+  gap: 16px;
 }
 
-article.confirm-article label {
-  padding: 4px 0px;
-  display: block;
-  color: rgba(255,255,255,0.6);
-}
-
-article.confirm-article input[type='text'],
-article.confirm-article input[type='password'] {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 16px;
-  border-radius: 4px;
-  border: none;
-  outline: none;
-  display: block;
-  outline: none;
-  resize: none;
-  width: 100%;
-  padding: 16px;
-  border: solid 1px #555555;
-  background: #1f1f1f;
-  color: #fff;
-}
-
-.field.code {
-  margin-top: 16px;
-}
-
-article.confirm-article input[type='text']:focus ,
-article.confirm-article input[type='password']:focus {
-  border: solid 1px rgb(149,0,255,1);
-}
-
-article.confirm-article .submit {
-  margin-top: 24px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-
-article.confirm-article  h2 {
+/* Heading styling */
+.confirmation_form h2 {
   text-align: center;
   color: #fff;
-  margin-top: 0;
+  margin: 0 0 24px 0;
+  font-size: 24px;
 }
 
-article.confirm-article button[type='submit'] {
-  font-weight: 800;
-  outline: none;
-  border: none;
-  border-radius: 6px;
-  padding: 18px 28px;
+/* Fields container */
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Individual field styling */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field label {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+}
+
+.field input {
+  width: 100%;
+  padding: 12px;
   font-size: 16px;
-  background: rgba(149,0,255,1);
+  border: 1px solid #555555;
+  border-radius: 4px;
+  background: #1f1f1f;
   color: #fff;
+  outline: none;
+  transition: border-color 0.3s ease;
 }
 
-article.confirm-article button.resend {
+.field input:focus {
+  border-color: rgba(149, 0, 255, 1);
+}
+
+/* Error message styling */
+.errors {
+  color: #ff6b6b;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* Sent message styling */
+.sent {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* Submit button container */
+.submit {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.submit button {
   font-weight: 800;
-  outline: none;
+  font-size: 16px;
+  padding: 12px 24px;
   border: none;
   border-radius: 6px;
-  padding: 18px 28px;
-  font-size: 16px;
+  background: rgba(149, 0, 255, 1);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit button:hover {
+  background: rgba(149, 0, 255, 0.9);
+}
+
+/* Resend code button styling */
+.resend-code {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.resend-code button {
+  font-weight: 800;
+  font-size: 14px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
   background: #562397;
   color: #fff;
-  margin-top: 24px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
-article.confirm-article button.resend:hover {
+
+.resend-code button:hover {
   background: #451782;
 }
 
-article.confirm-article .sent-message {
-  margin-top: 24px;
-  font-size: 18px;
-  font-weight: 600;
-  color: rgba(0,0,0,0.7)
+/* Sign-in link styling */
+.signin-link {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.signin-link a {
+  color: rgba(149, 0, 255, 1);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.signin-link a:hover {
+  color: rgba(149, 0, 255, 0.8);
 }
