@@ -55,3 +55,36 @@ The following steps were taken to implement user authentication using Cognito Cu
 *   **Demonstrated how to store additional user information** in Cognito, beyond the username and email, and how to retroactively add them.
 *   **Showed how to examine the objects returned during the sign-in process** to understand available user attributes and session information.
 *   **Addressed an issue where the username was not pre-filled** on the confirmation page and acknowledged the need for better React skills to resolve it.
+
+# Week 3 — Congito JWT Server-Side Verify
+
+The goal was to implement a back end for Cognito authentication using Flask, focusing on verifying the access token passed from the front end to protect API endpoints. Here’s a summary of the steps taken:
+
+*   **Access Token Handling**: The access token, obtained during front-end sign-in and stored in local storage, needs to be passed along with API calls to the back end. This token is included in the header of the request.
+
+*   **Reading Headers in Flask**: Flask's `request` object is used to view the headers. The authorization header, typically a bearer token, is extracted from the request.
+
+*   **CORS Configuration**: There was an issue with CORS (Cross-Origin Resource Sharing) that needed to be resolved to allow the authorization header. The code was updated to allow the authorization header and expose it.
+
+*   **JWT Decoding and Verification**: The access token (JWT) needs to be decoded to extract information and verify its correctness. Instead of relying on a third-party library, the decision was made to implement a custom solution for token verification.
+
+*   **Cognito Token Verification**: A new library was made called Cognito JWT token. This involves:
+    *   Extracting header information.
+    *   Verifying the signature.
+    *   Decoding the token.
+    *   Extracting the claims.
+    *   Validating the token against Cognito-generated keys.
+
+*   **Environment Variables**: The Cognito user pool ID and client ID are set as environment variables.
+
+*   **Token Verification Implementation**: Implemented the token verification logic, extracting the access token from the header and verifying it using the Cognito JWT token. The claims are extracted.
+
+*   **Authentication Endpoints**: Implemented logic to differentiate between authenticated and unauthenticated requests. Depending on the authentication status, different data is returned.
+
+*   **Sign-out**: remove the item from local storage.
+
+*   **Edge Cases and Debugging**: Several issues were encountered and resolved:
+    *   An incorrect client ID in the Docker Compose file, causing authentication failures, was identified and fixed.
+    *   The token expiration was checked.
+    *   An issue where the token was not being cleared on sign-out was identified.
+
