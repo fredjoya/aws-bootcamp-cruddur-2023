@@ -38,3 +38,20 @@ In this part of the AWS Cloud Project Bootcamp, the focus was on implementing **
     *   Identified and corrected a mistake in the app client settings, which caused a "User SRP" error, necessitating the recreation of the user pool.
     *   Addressed an issue where error messages were not displaying correctly on the sign-in page.
     *   I was unable to confirm the user and user was able to get confirmation emails.
+ 
+
+# Week 3 — Cognito Custom Pages
+
+The following steps were taken to implement user authentication using Cognito Custom Pages:
+
+*   **Investigated and resolved an error** that occurred when a user in a "Force change password" state tried to call a JWT token. This was addressed using an AWS CLI command to bypass the force password change step.
+*   **Implemented a sign-up page**, including handling custom attributes such as name and preferred username.
+*   **Configured a confirmation page** to allow users to confirm their email addresses after signing up.
+*   **Addressed issues related to username and email configurations** in the Cognito user pool, which involved recreating the user pool with the correct settings.
+*   **Implemented a password recovery page** to allow users to reset their passwords if they forget them.
+*   **Identified the need to protect authenticated requests** on the back end.
+*   **Explored the possibility of integrating identity providers** such as Facebook, Google, Amazon, or Apple for user login.
+*   **Discussed potential UI improvements**, such as displaying a flash message after email confirmation and enhancing the password reset page.
+*   **Demonstrated how to store additional user information** in Cognito, beyond the username and email, and how to retroactively add them.
+*   **Showed how to examine the objects returned during the sign-in process** to understand available user attributes and session information.
+*   **Addressed an issue where the username was not pre-filled** on the confirmation page and acknowledged the need for better React skills to resolve it.
