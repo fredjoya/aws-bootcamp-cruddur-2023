@@ -124,6 +124,35 @@ The goal was to implement a back end for Cognito authentication using Flask, foc
 *   Explore API Gateway with Lambda authorizers, keeping in mind the potential for 401 errors and cost implications.
 *   Investigate the amplify refresh token to ensure tokens are refreshed.
 
+# Improving UI Contrast and Implementing CSS Variables for Theming
+
+In this part of the AWS cloud project bootcamp, the focus was on improving the UI contrast and implementing CSS variables for theming. The goal was to make the UI easier to see, especially on monitors where the initial design appeared unclear.
+
+Here's a breakdown of the steps taken:
+
+*   **Initial Assessment:** The existing UI was evaluated, noting the difficulty in distinguishing between different areas due to poor contrast.
+*   **CSS Adjustments:**
+    *   The background colour was modified using the inspector tool to find a more suitable colour.
+    *   The colour was changed by dragging the colour picker to a more suitable color.
+    *   The specific code for the colour was found in the index.css file.
+    *   The border bottom colour of elements was adjusted to improve visibility.
+    *   The colour was changed by dragging the colour picker to a more suitable colour.
+    *   The code for the border bottom color was found in the activity item CSS.
+*   **CSS Variables for Theming:**
+    *   CSS variables were introduced to manage colours more efficiently and enable theming.
+    *   Variables were defined in the root element within the index.css file.
+    *   Existing colour values were replaced with references to these CSS variables.
+    *   This approach allows for easier modification of the colour scheme across the application.
+*   **Addressing Contrast Issues:**
+    *   Contrast issues around specific elements, such as the search field, were identified and addressed.
+    *   New CSS variables were created for field borders and backgrounds.
+    *   Adjustments were made to ensure consistency in UI elements across different pages, such as the sign-in page.
+*   **Code Maintenance Considerations**:
+    *   A decision to use CSS instead of SAS was made, in light of long term maintainability.
+    *   It was determined that using a simpler and primitive code, such as CSS, is better for maintenance long term.
+*   **Commit and Sync:** The changes were committed with the message "Improved UI changes and theme CSS variables" and then synced.
+
+The overall goal was to improve the UI's visibility and maintainability by adjusting colours, introducing CSS variables for theming, and ensuring consistency across different components and pages.
 
 
 
