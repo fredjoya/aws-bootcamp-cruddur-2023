@@ -1,4 +1,4 @@
-# Week 3 — Decentralized Authentication
+# Decentralized Authentication
 
 In this part of the AWS Cloud Project Bootcamp, the focus was on implementing **decentralized authentication with Cognito**. Here's a breakdown of the steps:
 
@@ -40,7 +40,7 @@ In this part of the AWS Cloud Project Bootcamp, the focus was on implementing **
     *   I was unable to confirm the user and user was able to get confirmation emails.
  
 
-# Week 3 — Cognito Custom Pages
+# Cognito Custom Pages
 
 The following steps were taken to implement user authentication using Cognito Custom Pages:
 
@@ -54,9 +54,8 @@ The following steps were taken to implement user authentication using Cognito Cu
 *   **Discussed potential UI improvements**, such as displaying a flash message after email confirmation and enhancing the password reset page.
 *   **Demonstrated how to store additional user information** in Cognito, beyond the username and email, and how to retroactively add them.
 *   **Showed how to examine the objects returned during the sign-in process** to understand available user attributes and session information.
-*   **Addressed an issue where the username was not pre-filled** on the confirmation page and acknowledged the need for better React skills to resolve it.
 
-# Week 3 — Congito JWT Server-Side Verify
+# Cognito JWT Server-Side Verify
 
 The goal was to implement a back end for Cognito authentication using Flask, focusing on verifying the access token passed from the front end to protect API endpoints. Here’s a summary of the steps taken:
 
@@ -87,4 +86,44 @@ The goal was to implement a back end for Cognito authentication using Flask, foc
     *   An incorrect client ID in the Docker Compose file, causing authentication failures, was identified and fixed.
     *   The token expiration was checked.
     *   An issue where the token was not being cleared on sign-out was identified.
+
+# JWT Exploration and Verification Strategies
+
+**Objective**: To explore different approaches to verifying JWTs in an AWS environment, considering trade-offs between security, performance, and cost.
+
+**Key Considerations and Options Explored:**
+
+*   **JWT Verification with Cognito:**
+    *   The initial approach involved using a third-party library for JWT verification.
+    *   The use of `boto3` to call Cognito IPD (Identity Provider) and the `get_user` function was considered. However, this was deemed unsuitable because it involves hitting the Cognito API, which negates the benefit of JWTs (self-contained verification). The `get_user` function retrieves user attributes and metadata, which may not be necessary for simple verification.
+*   **AWS-provided JWT Verification:**
+    *   The AWS JWT Verify library (Node.js) was examined, which is recommended for API Gateway, AppSync, Lambda authorizers, CloudFront Lambda Edge, or Node.js apps running on ECS Fargate.
+    *   A Python equivalent was sought, and community-developed libraries were found.
+    *   The importance of auditing community libraries for quality and security was emphasized. AWS-provided libraries are generally preferred due to official support.
+*   **Alternative Architectures for JWT Verification:** Several architectural patterns were considered for implementing JWT verification:
+    *   **Middleware:** Implementing custom middleware within the Flask application to handle JWT verification. This approach keeps the verification logic within the application but requires the middleware to be written in the same language as the server (Flask/Python).
+    *   **Sidecar Container:** Using a separate container (sidecar) running a Node.js application with the AWS JWT Verify library. The Flask app would pass requests to the sidecar for JWT verification. This allows using different languages but adds complexity and resource overhead, especially in ECS EC2 environments where capacity planning is crucial.
+    *   **API Gateway with Lambda Authorizer:** Utilizing AWS API Gateway with a Lambda authorizer function to handle JWT verification. API Gateway can directly authorize JWTs or use a Lambda function. The trade-offs include potential cost implications (depending on API Gateway usage) and the possibility of API Gateway returning 401 errors, which might not be desired.
+*   **JWT Structure and Claims:**
+    *   JWTs have a specific structure and contain encoded data (claims).
+    *   Standard claims include audience (aud), issuer (iss), subject, expiration time, and more.
+    *   The audience claim identifies the intended recipients of the JWT, such as a Cognito user pool.
+
+**Trade-offs and Decisions:**
+
+*   The key trade-off is between tightly coupled (code within the application) and decoupled (external services) solutions.
+*   Factors to consider include:
+    *   **Maintainability:** Smaller, self-written code may be easier to maintain.
+    *   **Security:** Community libraries should be carefully audited.
+    *   **Performance:** Avoiding unnecessary API calls (like hitting Cognito for verification) is crucial.
+    *   **Cost:** API Gateway can be expensive at scale.
+    *   **Complexity:** Introducing additional containers (sidecar) or services (API Gateway) increases architectural complexity.
+
+**Considerations for Future Implementation:**
+
+*   Explore API Gateway with Lambda authorizers, keeping in mind the potential for 401 errors and cost implications.
+*   Investigate the amplify refresh token to ensure tokens are refreshed.
+
+
+
 
