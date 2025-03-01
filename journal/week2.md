@@ -75,3 +75,51 @@ Honeycomb's query interface was used to visualize and analyze the trace data. A 
 *   **Event-Driven Architecture** An event-driven architecture uses events to identify and react to occurrences, such as an S3 bucket being open to the internet, which provides an alternative to traditional logging.
 *   **AWS Services for Threat Intelligence** Services like CloudTrail, GuardDuty, and Inspector provide threat intelligence information that can be integrated using EventBridge.
 
+
+# Instrument XRay
+This week we focused on implementing AWS X-Ray for tracing and debugging applications. Here's a breakdown of the steps:
+
+*   **Initial Setup:**
+    *   Create a new branch in the repository for X-Ray implementation.
+    *   Open the project in Gitpod.
+    *   Install the necessary dependencies, including the AWS X-Ray SDK.
+
+*   **X-Ray Daemon:**
+    *   Understanding the necessity of running an X-Ray daemon alongside the application to collect, batch, and send data to the X-Ray API.
+    *   Add the X-Ray daemon to the Docker Compose file using the `amazon/aws-xray-daemon` image.
+    *   Configure environment variables for the daemon, including the region.
+
+*   **AWS SDK and Instrumentation**
+    *   Install the AWS X-Ray SDK for Python.
+    *   Add the SDK to the backend Flask application's requirements.
+    *   Utilise middleware to capture information from incoming requests for tracing.
+    *   Import necessary modules from the `aws_xray_sdk`.
+
+*   **Configuration and Code Changes:**
+    *   Implement the X-Ray recorder and Flask middleware in the application code to capture data.
+    *   Set the AWS X-Ray URL, which might involve dynamic naming based on the environment.
+    *   Create an `x-ray.json` file for setting up sampling rules.
+
+*   **Sampling and Groups:**
+    *   Create an X-Ray group to group traces, which aids in filtering and analysis.
+    *   Configure sampling rules to control the amount of data collected, balancing cost and detail.
+
+*   **Docker Compose Configuration:**
+    *   Add the X-Ray daemon service to the `docker-compose.yml` file.
+    *   Set environment variables for the X-Ray daemon, including the AWS region.
+
+*   **Running the Application:**
+    *   Use `docker compose up` to start the application with the X-Ray daemon.
+    *   Monitor logs to ensure data is being sent to X-Ray.
+
+*   **Verification and Troubleshooting:**
+    *   Check the X-Ray console in the AWS Management Console to view traces and service maps.
+    *   Address any errors related to authentication or configuration.
+    *   Adjust the `docker-compose.yml` file and application code to resolve issues.
+
+*   **Enhancements (Stretch Goals):**
+    *   Explore adding sub-segments for more granular tracing.
+    *   Implement custom segments and sub-segments in the code to capture specific data points.
+    *   Experiment with metadata and annotations to add additional context to traces.
+
+
