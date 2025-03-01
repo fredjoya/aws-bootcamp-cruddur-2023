@@ -1,4 +1,4 @@
-# Decentralized Authentication
+# Week 3 - Decentralized Authentication
 
 In this part of the AWS Cloud Project Bootcamp, the focus was on implementing **decentralized authentication with Cognito**. Here's a breakdown of the steps:
 
