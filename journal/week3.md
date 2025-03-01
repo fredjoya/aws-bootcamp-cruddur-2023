@@ -154,5 +154,29 @@ Here's a breakdown of the steps taken:
 
 The overall goal was to improve the UI's visibility and maintainability by adjusting colours, introducing CSS variables for theming, and ensuring consistency across different components and pages.
 
+# Topics -- Securing Amazon RDS Postgres Database
+
+Here are some of the topics covered in this part of the bootcamp:
+*   **Creating an Amazon RDS Postgres database** securely, including a walkthrough of the Amazon console.
+*   **Connecting to the database** and troubleshooting common connection errors.
+*   **Database types in the cloud**:
+    *   Relational databases (e.g., MySQL, SQL Server, Postgres). These have tables with rows that have connections. SQL queries can retrieve information.
+    *   Non-relational databases (e.g., DynamoDB). These are more decoupled, without strong relationships between columns and rows.
+*   **Amazon RDS database engines**, such as SQL Server, Postgres, Oracle, MariaDB, and Aurora. Aurora is Amazon's version of Postgres and MySQL.
+*   **Why companies use Amazon RDS**: to store information like customer and credit card data.
+*   **Security best practices** for Amazon RDS Postgres.
+    *   Ensuring the database is in the correct region.
+    *   Configuring inbound rules to restrict connections to trusted IPs.
+    *   Setting up organization Service Control Policies (SCP) to prevent RDS instance deletion.
+    *   Enabling deletion protection.
+    *   Enforcing encryption on RDS.
+    *   Using CloudTrail to audit database activities.
+    *   Enabling Amazon GuardDuty to detect malicious behaviour.
+    *   Limiting users who can create or connect to RDS instances.
+    *   Considering different authentication types, such as IAM user or Kerberos.
+*   **Troubleshooting connection errors**, which often involve checking security group rules and public accessibility settings.
+*   **Deleting an Amazon RDS Postgres database** when it is no longer needed.
+
+
 
 
