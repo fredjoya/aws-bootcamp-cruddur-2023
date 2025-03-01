@@ -28,3 +28,101 @@ This journal entry summarizes the activities undertaken during week four of the 
 *   **Creating a `db_seed` script** A `db_seed` script was created to automate the process of loading seed data into the database. A seed.sql file was also created.
 *   **Implementing Conditional Logic** Implemented conditional logic in the schema load script to switch between local and production databases.
 *   **Adding Colour Coding to Scripts** Colour coding was added to the scripts to improve readability and distinguish output.
+
+# SQL RDS
+In this part of the boot camp, the focus was on setting up a **PostgreSQL database**, connecting to it, and performing basic queries. Additionally, work was done to prepare the environment for further development, including setting up connection pooling and writing scripts for database management.
+
+Here's a breakdown of the key steps:
+
+*   **Database Connection and Exploration**: Connected to the database using the `db_connect` script. Explored database tables using `\dt` in `psql`. Used `SELECT * FROM activities` to view table data. Expanded record display with `\x` for better readability.
+
+```bash
+# Connecting to the database
+./bin/db_connect
+# Viewing tables
+\dt
+# Selecting all records from the activities table
+SELECT all from activities;
+```
+
+*   **Connection Pooling Setup**: Installed `psycopg` version 3, a PostgreSQL adapter for Python, to enable connection pooling.
+
+```python
+# Snippet from requirements.txt
+psycopg[binary]
+psycopg_pool
+```
+
+Created `db.py` inside the `lib` directory to establish a connection pool.
+
+```python
+# Snippet from lib/db.py
+import os
+from psycopg_pool import ConnectionPool
+
+```
+
+Modified `docker-compose.yaml` to pass the connection URL as an environment variable.
+
+```yaml
+# Snippet from docker-compose.yaml
+environment:
+    CONNECTION_URL: ${CONNECTION_URL}
+```
+
+*   **Writing Raw SQL Queries**: Implemented raw SQL queries to fetch data from the database. Utilised PostgreSQL's JSON functions to directly return JSON from the database.
+
+```python
+# Example query in home_activities.py
+sql = """
+    SELECT row_to_json(activities.*) FROM activities
+    """
+with pool.connection() as conn:
+    with conn.cursor() as cur:
+        cur.execute(sql)
+        json = cur.fetchone()
+print(json)
+```
+
+*   **Database Management Scripts**: Created a `db_setup` script to automate database tasks like dropping, creating, loading the schema and seeding the database.
+
+```bash
+# Snippet from bin/db_setup
+#!/bin/bash
+set -e
+source ./bin/db_path
+./bin/db_drop
+./bin/db_create
+./bin/schema_load
+./bin/db_seed
+```
+
+Implemented a `db_sessions` script to view active database connections and terminate idle connections.
+
+```sql
+# Example SQL command to show active connections
+SELECT pid, datname, usename, client_addr, state, query FROM pg_stat_activity WHERE datname = current_database();
+```
+
+Addressed dropping the database with active connections by identifying and terminating these connections.
+
+*   **Automating Security Group Updates in Gitpod**: Created a script (`RDS_update_SG_rule`) to automatically update the security group rule with the Gitpod IP address.
+
+```bash
+# Snippet from bin/RDS_update_SG_rule
+#!/bin/bash
+export GITPOD_IP=$(curl -s https://api.ipify.org)
+aws ec2 authorize-security-group-ingress --group-id $SECURITY_GROUP_ID --protocol tcp --port 5432 --cidr ${GITPOD_IP}/32 --group-name gitpod
+```
+
+Configured `gitpod.yml` to run the script on every workspace start.
+
+```yaml
+# Snippet from .gitpod.yml
+tasks:
+  - name: PostgreSQL
+    init: source ./bin/RDS_update_SG_rule
+```
+
+These steps detail setting up a database, connecting to it, writing queries, and automating database management.
+
