@@ -126,3 +126,116 @@ tasks:
 
 These steps detail setting up a database, connecting to it, writing queries, and automating database management.
 
+# Cognito Post Confirmation Lambda
+
+In this part of the AWS Cloud project bootcamp, the main objective was to implement a **custom authoriser for Cognito**, using a **Lambda function to verify users** and insert their information into a database. This involved creating a **Cognito hook** to trigger after sign-up, powered by a Lambda function.
+
+Here’s a breakdown of the steps, enhanced with specific code examples and further details:
+
+*   **Lambda Creation:** A Lambda function was created to handle post-confirmation tasks after user sign-up. The function was initially set up with **Python 3.9 as the runtime**.
+
+*   **Environment Variables:** Environment variables, specifically the **connection URL**, were configured for the Lambda function to connect to the database. This URL contains the necessary credentials and endpoint information to establish a connection with the PostgreSQL database.
+
+*   **Code Implementation:** The Python code for the Lambda function was written to **insert user data into the database upon successful sign-up**:
+
+    *   The initial code was modified to use a **connection URL for database access**.
+    *   The code includes extracting user attributes such as `display_name`, `email`, `handle`, and `Cognito user ID`.
+    *   A SQL query was constructed to insert the user data into the `users` table.
+
+```python
+import json
+import psycopg2
+import os
+
+def lambda_handler(event, context):
+    user = event['request']['userAttributes']
+    print('userAttributes')
+    print(user)
+
+    user_display_name  = user['name']
+    user_email         = user['email']
+    user_handle        = user['preferred_username']
+    user_cognito_id    = user['sub']
+    try:
+      print('entered-try')
+      sql = f"""
+         INSERT INTO public.users (
+          display_name, 
+          email,
+          handle, 
+          cognito_user_id
+          ) 
+        VALUES(%s,%s,%s,%s)
+      """
+      print('SQL Statement ----')
+      print(sql)
+      conn = psycopg2.connect(os.getenv('CONNECTION_URL'))
+      cur = conn.cursor()
+      params = [
+        user_display_name,
+        user_email,
+        user_handle,
+        user_cognito_id
+      ]
+      cur.execute(sql,params)
+      conn.commit() 
+
+    except (Exception, psycopg2.DatabaseError) as error:
+      print(error)
+    finally:
+      if conn is not None:
+          cur.close()
+          conn.close()
+          print('Database connection closed.')
+    return event
+```
+
+*   The user attributes were **printed to CloudWatch logs for debugging**.
+
+*   **Lambda Layers:** A **Lambda layer was added** to include the `psycopg2` library, which is required for connecting to a PostgreSQL database. This is because AWS Lambda doesn't natively include the necessary PostgreSQL libraries.
+
+*   **Cognito Trigger Configuration:** A trigger was added in Cognito to invoke the Lambda function post-confirmation, specifically on sign-up. This ensures that the Lambda function is executed immediately after a user confirms their account.
+
+*   **VPC Configuration:** The Lambda function was connected to a **VPC** to allow access to the RDS instance. This involved configuring the VPC settings and security groups. Additionally, an IAM policy was created and attached to the Lambda execution role to grant necessary permissions for creating network interfaces. An example of the policy:
+
+```json
+    {
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "ec2:CreateNetworkInterface",
+                    "ec2:DeleteNetworkInterface",
+                    "ec2:DescribeNetworkInterfaces"
+                ],
+                "Resource": "*"
+            }
+        ]
+    }
+```
+
+*   **Debugging and Error Handling:** Several iterations of debugging were performed to resolve issues such as:
+
+    *   `UnboundLocalError` due to variable assignment issues.
+    *   Timeouts caused by the Lambda function’s inability to connect to the database.
+    *   Syntax errors in the SQL query.
+    *   Schema inconsistencies.
+
+*   **Schema Update:** The database schema was updated to include an email field and ensure that certain fields were defined as NOT NULL.
+
+```sql
+    ALTER TABLE users
+    ADD COLUMN email VARCHAR(255);
+    ALTER TABLE users
+    ALTER COLUMN display_name SET NOT NULL;
+    ALTER TABLE users
+    ALTER COLUMN handle SET NOT NULL;
+    ALTER TABLE users
+    ALTER COLUMN cognito_user_id SET NOT NULL;
+```
+
+*   **Testing and Verification:** The sign-up process was tested multiple times to ensure that the Lambda function was triggered correctly and that user data was inserted into the database. **CloudWatch logs were used to monitor the Lambda function’s execution and identify any errors**.
+
+*   **Final Verification:** After resolving all issues, the Lambda function successfully inserted user data into the database upon sign-up.
+
+
