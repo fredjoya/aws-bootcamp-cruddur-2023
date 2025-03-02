@@ -22,6 +22,7 @@ tasks:
     command: |
       export GITPOD_IP=$(curl ifconfig.me)
       source  "$THEIA_WORKSPACE_ROOT/backend-flask/bin/rds-update-sg-rule"
+    init: source ./bin/RDS-update-sg-rule
   - name: xray
     command: |
       cd backend-flask
@@ -29,6 +30,7 @@ tasks:
       sudo apt-get update
       sudo apt-get install -y xray-daemon
       pip install -r requirements.txt
+    
       
 vscode:
   extensions:
