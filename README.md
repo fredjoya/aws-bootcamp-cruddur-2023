@@ -1,9 +1,9 @@
-# FREE AWS Cloud Project Bootcamp
+# AWS Cloud Project Bootcamp
 
 - Application: Cruddur
 - Cohort: 2023-A1
 
-This is an AWS Cloud Project Bootcamp from 2023 that I have been working on in 2025. Feel free to read my journal entries to review my experience. 
+This is an AWS Cloud Project Bootcamp from 2023 that I have been working on in 2025. Feel free to read my journal entries below to review my experience. 
 
 ![Cruddur Graphic](_docs/assets/cruddur-banner.jpg)
 
